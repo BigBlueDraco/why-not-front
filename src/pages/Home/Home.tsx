@@ -20,39 +20,6 @@ export const Home = () => {
   const [isLoginMenuOpen, setLoginMenuOpen] = useState(false);
   return (
     <>
-      <AppBar position="static">
-        <Container>
-          <Toolbar>
-            <Typography variant="h6" component="span" sx={{ flexGrow: 1 }}>
-              Tinder
-            </Typography>
-            {/* <Button color="inherit">Login</Button> */}
-            {isMobile && (
-              <IconButton
-                size="large"
-                edge="start"
-                color="inherit"
-                aria-label="menu"
-                sx={{}}
-                onClick={() => setLoginMenuOpen(true)}
-              >
-                <MenuIcon />
-              </IconButton>
-            )}
-            {!isMobile && (
-              <Button
-                onClick={() => setLoginMenuOpen(true)}
-                size="large"
-                color="secondary"
-                variant="text"
-              >
-                Увійти
-              </Button>
-            )}
-          </Toolbar>
-        </Container>
-      </AppBar>
-
       <Container
         sx={{
           display: "flex",
@@ -88,18 +55,16 @@ export const Home = () => {
               gap: 2,
             }}
           >
-            <Button variant="contained">
+            <Button href="/onbording" variant="contained">
               {isMobile ? "Створити аккаунт" : "Створити обліковий запис"}
             </Button>
-            {isMobile && (
-              <Button
-                href="/"
-                variant="outlined"
-                onClick={() => setLoginMenuOpen(true)}
-              >
-                Увійти
-              </Button>
-            )}
+            <Button
+              href="/"
+              variant="outlined"
+              onClick={() => setLoginMenuOpen(true)}
+            >
+              Увійти
+            </Button>
           </ButtonGroup>
         </Box>
       </Container>
