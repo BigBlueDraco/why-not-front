@@ -1,6 +1,5 @@
 import {
   AppBar,
-  Button,
   Container,
   IconButton,
   Toolbar,
@@ -10,13 +9,10 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Outlet } from "react-router-dom";
-import { useState } from "react";
-import { LoginWindow } from "../LoginWindow/LoginWindow";
 
-export const Layout = ({}) => {
+export const Layout: React.FC = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const [isMenuOpen, setMenuOpen] = useState(false);
   return (
     <>
       <AppBar position="static">
@@ -33,7 +29,7 @@ export const Layout = ({}) => {
                 color="inherit"
                 aria-label="menu"
                 sx={{}}
-                onClick={() => setMenuOpen(true)}
+                onClick={() => {}}
               >
                 <MenuIcon />
               </IconButton>
