@@ -6,7 +6,7 @@ export const RegisterSchema = object({
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
   passwordConfirm: string().nonempty("Please confirm your password"),
-  ["first_name"]: string()
+  first_name: string()
     .nonempty("Firstname is required")
     .max(50, "Password must be less than 50 characters"),
   last_name: string()

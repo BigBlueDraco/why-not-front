@@ -18,7 +18,6 @@ import { gql, useMutation } from "@apollo/client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginInput, LoginSchema } from "./login.shema";
-import { Token } from "graphql";
 import { useNavigate } from "react-router-dom";
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -79,7 +78,7 @@ export const LoginWindow: React.FC<ILoginWindow> = ({ isOpen, onClose }) => {
     }
   `;
 
-  const [login, { data, loading, error }] = useMutation(LOGIN);
+  const [login, { data }] = useMutation(LOGIN);
 
   useEffect(() => {
     if (data?.login?.access_token) {

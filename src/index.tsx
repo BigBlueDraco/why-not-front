@@ -14,14 +14,7 @@ import {
 import { LinkProps } from "@mui/material/Link";
 import { createTheme } from "@mui/material/styles";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  gql,
-  createHttpLink,
-} from "@apollo/client";
-import { setContext } from "@apollo/client/link/context";
+import { ApolloProvider } from "@apollo/client";
 import { client } from "./apollo/client";
 
 const LinkBehavior = React.forwardRef<
