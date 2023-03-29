@@ -6,10 +6,10 @@ export const RegisterSchema = object({
     .min(8, "Password must be more than 8 characters")
     .max(32, "Password must be less than 32 characters"),
   passwordConfirm: string().nonempty("Please confirm your password"),
-  firstName: string()
+  ["first_name"]: string()
     .nonempty("Firstname is required")
     .max(50, "Password must be less than 50 characters"),
-  lastName: string()
+  last_name: string()
     .nonempty("Firstname is required")
     .max(50, "Password must be less than 50 characters"),
 }).refine((data) => data.password === data.passwordConfirm, {

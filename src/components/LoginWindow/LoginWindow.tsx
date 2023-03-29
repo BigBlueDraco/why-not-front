@@ -12,8 +12,14 @@ import {
   useTheme,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
-import { forwardRef } from "react";
+import { forwardRef, useEffect } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import { gql, useMutation } from "@apollo/client";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginInput, LoginSchema } from "./login.shema";
+import { Token } from "graphql";
+import { useNavigate } from "react-router-dom";
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -30,12 +36,62 @@ interface ILoginWindow {
 export const LoginWindow: React.FC<ILoginWindow> = ({ isOpen, onClose }) => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const navigate = useNavigate();
+  const {
+    register,
+    formState: { errors, isSubmitSuccessful },
+    reset,
+    handleSubmit,
+  } = useForm<LoginInput>({ resolver: zodResolver(LoginSchema) });
+
+  const onSubmitHandler: SubmitHandler<LoginInput> = async (values) => {
+    await login({
+      variables: {
+        loginData: {
+          ...values,
+        },
+      },
+    });
+  };
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/dashboard");
+    }
+  });
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      navigate("/dashboard");
+      reset();
+    }
+    if (localStorage.getItem("token")) {
+      navigate("/dashboard");
+    }
+  }, [isSubmitSuccessful, reset, navigate]);
+  const LOGIN = gql`
+    mutation Login($loginData: LoginUserInput!) {
+      login(loginUserInput: $loginData) {
+        access_token
+        user {
+          id
+        }
+      }
+    }
+  `;
+
+  const [login, { data, loading, error }] = useMutation(LOGIN);
+
+  useEffect(() => {
+    if (data?.login?.access_token) {
+      localStorage.setItem("token", data?.login?.access_token);
+    }
+  }, [data]);
   return (
     <>
       <Dialog
         TransitionComponent={Transition}
         fullScreen={isMobile}
-        open={isOpen || false}
+        open={isOpen && !localStorage.getItem("token")}
         onClose={() => onClose()}
         disableEscapeKeyDown={true}
         maxWidth="md"
@@ -57,16 +113,32 @@ export const LoginWindow: React.FC<ILoginWindow> = ({ isOpen, onClose }) => {
         <DialogContent>
           <Box
             component="form"
-            onSubmit={(e) => {
-              e.preventDefault();
-            }}
+            onSubmit={handleSubmit(onSubmitHandler)}
             sx={{ display: "flex", flexDirection: "column", gap: 6 }}
           >
             <FormGroup
               sx={{ display: "flex", flexDirection: "column", gap: 2 }}
             >
-              <TextField label="Email" variant="standard" />
-              <TextField label="password" variant="standard" />
+              <TextField
+                id="email"
+                label="Email"
+                fullWidth
+                type="email"
+                error={!!errors["email"]}
+                helperText={errors["email"] ? errors["email"].message : ""}
+                {...register("email")}
+              />
+              <TextField
+                id="password"
+                label="Password"
+                fullWidth
+                type="password"
+                error={!!errors["password"]}
+                helperText={
+                  errors["password"] ? errors["password"].message : ""
+                }
+                {...register("password")}
+              />
             </FormGroup>
             <Button variant="contained" type="submit">
               Увійти

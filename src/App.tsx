@@ -1,8 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
 import { Home } from "./pages/Home/Home";
 import { Dashboard } from "./pages/Dashboard";
 import { Onbording } from "./pages/Onbording";
 import { Layout } from "./components/Layout/Layout";
+import { useEffect } from "react";
 
 function App() {
   return (

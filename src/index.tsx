@@ -14,6 +14,15 @@ import {
 import { LinkProps } from "@mui/material/Link";
 import { createTheme } from "@mui/material/styles";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  gql,
+  createHttpLink,
+} from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import { client } from "./apollo/client";
 
 const LinkBehavior = React.forwardRef<
   HTMLAnchorElement,
@@ -22,6 +31,7 @@ const LinkBehavior = React.forwardRef<
   const { href, ...other } = props;
   return <RouterLink ref={ref} to={href} {...other} />;
 });
+
 const theme = createTheme({
   components: {
     MuiLink: {
@@ -45,10 +55,13 @@ theme.typography.h1 = {
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
+
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <App />
-    </ThemeProvider>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </ApolloProvider>
   </React.StrictMode>
 );

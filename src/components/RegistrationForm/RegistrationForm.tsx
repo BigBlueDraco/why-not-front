@@ -26,7 +26,6 @@ export const RegistrationForm = () => {
   useEffect(() => {
     if (isSubmitSuccessful) {
       navigate("/dashboard");
-      reset();
     }
   }, [isSubmitSuccessful, reset, navigate]);
 
@@ -83,18 +82,20 @@ export const RegistrationForm = () => {
             label="First name"
             fullWidth
             type="text"
-            error={!!errors["firstName"]}
-            helperText={errors["firstName"] ? errors["firstName"].message : ""}
-            {...register("firstName")}
+            error={!!errors["first_name"]}
+            helperText={
+              errors["first_name"] ? errors["first_name"].message : ""
+            }
+            {...register("first_name")}
           />
           <TextField
             id="lastName"
             label="Last name"
             fullWidth
             type="text"
-            error={!!errors["lastName"]}
-            helperText={errors["lastName"] ? errors["lastName"].message : ""}
-            {...register("lastName")}
+            error={!!errors["last_name"]}
+            helperText={errors["last_name"] ? errors["last_name"].message : ""}
+            {...register("last_name")}
           />
           <TextField
             id="password"
