@@ -60,7 +60,6 @@ export const LoginWindow: React.FC<ILoginWindow> = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (isSubmitSuccessful) {
-      navigate("/dashboard");
       reset();
     }
     if (localStorage.getItem("token")) {

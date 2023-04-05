@@ -11,6 +11,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterInput, RegisterSchema } from "./register.schema";
 import { useNavigate } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
 
 export const RegistrationForm = () => {
   const {
@@ -25,15 +26,43 @@ export const RegistrationForm = () => {
 
   useEffect(() => {
     if (isSubmitSuccessful) {
+      reset();
+    }
+    if (localStorage.getItem("token")) {
       navigate("/dashboard");
     }
   }, [isSubmitSuccessful, reset, navigate]);
 
-  const onSubmitHandler: SubmitHandler<RegisterInput> = (values) => {
-    console.log({
-      values,
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      navigate("/dashboard");
+    }
+  });
+
+  const SIGNUP = gql`
+    mutation Signup($signupData: SignupUserInput!) {
+      signup(signupUserInput: $signupData) {
+        access_token
+      }
+    }
+  `;
+  const [singup, { data }] = useMutation(SIGNUP);
+
+  const onSubmitHandler: SubmitHandler<RegisterInput> = async (values) => {
+    const { passwordConfirm, ...rest } = values;
+    await singup({
+      variables: {
+        signupData: {
+          ...rest,
+        },
+      },
     });
   };
+  useEffect(() => {
+    if (data?.signup?.access_token) {
+      localStorage.setItem("token", data?.signup?.access_token);
+    }
+  }, [data]);
   return (
     <Box
       marginTop={4}
