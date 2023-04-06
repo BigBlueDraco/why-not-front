@@ -1,5 +1,5 @@
 import { useMediaQuery } from "@mui/material";
-import { theme } from "../Themes/themeMaterialUI";
+import { theme } from "../themes/themeMaterialUI";
 
 export const useResponsive = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));

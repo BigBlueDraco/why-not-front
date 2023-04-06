@@ -9,8 +9,7 @@ import "@fontsource/roboto/700.css";
 import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./apollo/client";
-
-import { theme } from "./Themes/themeMaterialUI";
+import { theme } from "./themes/themeMaterialUI";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
