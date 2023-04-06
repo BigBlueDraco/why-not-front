@@ -1,17 +1,13 @@
-import {
-  Box,
-  Button,
-  TextField,
-  Typography,
-  useMediaQuery,
-  useTheme,
-} from "@mui/material";
-import { useEffect } from "react";
+import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterInput, RegisterSchema } from "./register.schema";
-import { useNavigate } from "react-router-dom";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
+import { SIGNUP_MUTATION } from "../../apollo/Auth/auth";
+import { useRedirectIfLoggedin } from "../../hooks/useRedirectIfLoggedIn";
+import { useSaveJWTtoLocaleStorage } from "../../hooks/useSaveJWTtoLocaleStorage";
+import { useResetForm } from "../../hooks/useResetForm";
+import { useResponsive } from "../../hooks/useResponsive";
 
 export const RegistrationForm = () => {
   const {
@@ -20,34 +16,11 @@ export const RegistrationForm = () => {
     reset,
     handleSubmit,
   } = useForm<RegisterInput>({ resolver: zodResolver(RegisterSchema) });
+
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const navigate = useNavigate();
+  const { isMobile } = useResponsive();
 
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
-    }
-    if (localStorage.getItem("token")) {
-      navigate("/dashboard");
-    }
-  }, [isSubmitSuccessful, reset, navigate]);
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/dashboard");
-    }
-  });
-
-  const SIGNUP = gql`
-    mutation Signup($signupData: SignupUserInput!) {
-      signup(signupUserInput: $signupData) {
-        access_token
-      }
-    }
-  `;
-  const [singup, { data }] = useMutation(SIGNUP);
-
+  const [singup, { data }] = useMutation(SIGNUP_MUTATION);
   const onSubmitHandler: SubmitHandler<RegisterInput> = async (values) => {
     const { passwordConfirm, ...rest } = values;
     await singup({
@@ -58,11 +31,11 @@ export const RegistrationForm = () => {
       },
     });
   };
-  useEffect(() => {
-    if (data?.signup?.access_token) {
-      localStorage.setItem("token", data?.signup?.access_token);
-    }
-  }, [data]);
+
+  useSaveJWTtoLocaleStorage(data?.signup?.access_token);
+  useRedirectIfLoggedin();
+  useResetForm({ isSubmitSuccessful, reset });
+
   return (
     <Box
       marginTop={4}

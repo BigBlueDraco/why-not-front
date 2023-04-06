@@ -8,17 +8,19 @@ import {
   IconButton,
   Slide,
   TextField,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
-import { forwardRef, useEffect } from "react";
+import { forwardRef } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import { gql, useMutation } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginInput, LoginSchema } from "./login.shema";
-import { useNavigate } from "react-router-dom";
+import { LOGIN_MUTATION } from "../../apollo/Auth/auth";
+import { useRedirectIfLoggedin } from "../../hooks/useRedirectIfLoggedIn";
+import { useResetForm } from "../../hooks/useResetForm";
+import { useSaveJWTtoLocaleStorage } from "../../hooks/useSaveJWTtoLocaleStorage";
+import { useResponsive } from "../../hooks/useResponsive";
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
     children: React.ReactElement<any, any>;
@@ -33,9 +35,7 @@ interface ILoginWindow {
   onClose: any;
 }
 export const LoginWindow: React.FC<ILoginWindow> = ({ isOpen, onClose }) => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const navigate = useNavigate();
+  const { isMobile } = useResponsive();
   const {
     register,
     formState: { errors, isSubmitSuccessful },
@@ -52,38 +52,11 @@ export const LoginWindow: React.FC<ILoginWindow> = ({ isOpen, onClose }) => {
       },
     });
   };
-  useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/dashboard");
-    }
-  });
+  const [login, { data }] = useMutation(LOGIN_MUTATION);
+  useRedirectIfLoggedin();
+  useResetForm({ isSubmitSuccessful, reset });
+  useSaveJWTtoLocaleStorage(data?.login?.access_token);
 
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset();
-    }
-    if (localStorage.getItem("token")) {
-      navigate("/dashboard");
-    }
-  }, [isSubmitSuccessful, reset, navigate]);
-  const LOGIN = gql`
-    mutation Login($loginData: LoginUserInput!) {
-      login(loginUserInput: $loginData) {
-        access_token
-        user {
-          id
-        }
-      }
-    }
-  `;
-
-  const [login, { data }] = useMutation(LOGIN);
-
-  useEffect(() => {
-    if (data?.login?.access_token) {
-      localStorage.setItem("token", data?.login?.access_token);
-    }
-  }, [data]);
   return (
     <>
       <Dialog

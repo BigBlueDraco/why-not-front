@@ -1,13 +1,13 @@
 import { Box, Button, ButtonGroup, Typography, useTheme } from "@mui/material";
 import { Container } from "@mui/system";
 import { useEffect, useState } from "react";
-import useMediaQuery from "@mui/material/useMediaQuery";
 import { LoginWindow } from "../../components/LoginWindow/LoginWindow";
 import { useNavigate } from "react-router-dom";
+import { useResponsive } from "../../hooks/useResponsive";
 
 export const Home = () => {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isMobile } = useResponsive();
   const [isLoginMenuOpen, setLoginMenuOpen] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {

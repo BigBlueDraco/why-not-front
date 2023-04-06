@@ -4,15 +4,13 @@ import {
   IconButton,
   Toolbar,
   Typography,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Outlet } from "react-router-dom";
+import { useResponsive } from "../../hooks/useResponsive";
 
 export const Layout: React.FC = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { isMobile } = useResponsive();
   return (
     <>
       <AppBar position="static">
