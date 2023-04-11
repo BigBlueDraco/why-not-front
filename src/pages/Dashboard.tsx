@@ -19,10 +19,11 @@ export const Dashboard = () => {
           display: "flex",
           minHeight: "100vh",
           maxHeight: "100vh",
+          overflow: "hidden",
         }}
       >
         <Sidebar />
-        <Container>Dashboqrd</Container>
+        <Container>Dashboqrd</Container>{" "}
       </Box>
     </>
   );

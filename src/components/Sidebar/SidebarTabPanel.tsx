@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -19,9 +19,7 @@ export const SidebarTabPanel = (props: TabPanelProps) => {
       {...other}
     >
       {value === index && (
-        <Box sx={{ pt: 2, pl: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
+        <Box sx={{ position: "relative", pl: 1, pr: 1 }}>{children}</Box>
       )}
     </div>
   );
