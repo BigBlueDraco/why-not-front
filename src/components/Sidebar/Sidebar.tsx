@@ -18,7 +18,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GET_CURRENT_USER } from "../../apollo/User/user";
 import { SidebarTabPanel } from "./SidebarTabPanel";
-import { GET_ALL_OFFERS } from "../../apollo/offer/offer";
 
 export const Sidebar = () => {
   const theme = useTheme();
@@ -28,8 +27,6 @@ export const Sidebar = () => {
     setValue(newValue);
   };
   const { error, data: currentUserData } = useQuery(GET_CURRENT_USER);
-  const { error: allOffersError, data: allOffersData } =
-    useQuery(GET_ALL_OFFERS);
   useEffect(() => {
     if (error?.message === "Unauthorized") {
       navigate("/");

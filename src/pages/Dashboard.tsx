@@ -2,9 +2,13 @@ import { Box, Container } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar/Sidebar";
+import { Deck } from "../components/Desk/desk";
+import { useQuery } from "@apollo/client";
+import { GET_ALL_OFFERS } from "../apollo/offer/offer";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
+  const { data: offers } = useQuery(GET_ALL_OFFERS);
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -23,7 +27,11 @@ export const Dashboard = () => {
         }}
       >
         <Sidebar />
-        <Container>Dashboqrd</Container>{" "}
+        <Container>
+          <Box sx={{ display: "flex", pt: 20 }}>
+            {offers && <Deck cardsArray={offers.getAllOffers} />}
+          </Box>
+        </Container>
       </Box>
     </>
   );
