@@ -108,9 +108,9 @@ export const Sidebar = () => {
           >
             {currentUserData &&
               currentUserData.getCurrentUser.offers?.map(
-                ({ title, description }: any) => {
+                ({ title, description, id }: any) => {
                   return (
-                    <ListItem>
+                    <ListItem key={id}>
                       <ListItemAvatar></ListItemAvatar>
                       <ListItemText>{title}</ListItemText>
                     </ListItem>

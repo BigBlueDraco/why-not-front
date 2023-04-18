@@ -1,26 +1,23 @@
 import React, { useState } from "react";
-import { useSprings, animated, to as interpolate } from "@react-spring/web";
+import { useSprings, animated } from "@react-spring/web";
 import { useDrag } from "react-use-gesture";
-import styles from "./styles.module.css";
-
-// const cardsMock = [
-//   "https://upload.wikimedia.org/wikipedia/commons/f/f5/RWS_Tarot_08_Strength.jpg",
-//   "https://upload.wikimedia.org/wikipedia/commons/5/53/RWS_Tarot_16_Tower.jpg",
-//   "https://upload.wikimedia.org/wikipedia/commons/9/9b/RWS_Tarot_07_Chariot.jpg",
-//   "https://upload.wikimedia.org/wikipedia/commons/d/db/RWS_Tarot_06_Lovers.jpg",
-//   "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/RWS_Tarot_02_High_Priestess.jpg/690px-RWS_Tarot_02_High_Priestess.jpg",
-//   "https://upload.wikimedia.org/wikipedia/commons/d/de/RWS_Tarot_01_Magician.jpg",
-// ];
+import styles from "./desk.module.css";
+import { Card } from "../Card/Card";
+import { MagnifyingGlass } from "react-loader-spinner";
+import BlockIcon from "@mui/icons-material/Block";
+import { Box, Typography } from "@mui/material";
 
 interface IDeck {
   cards: any;
   fetch: Function;
   pagination?: any;
+  loading?: boolean;
 }
 export const Deck: React.FC<IDeck> = ({
   cards,
   fetch,
   pagination: { itemsPerPage, currentPage, totalPages },
+  loading,
 }) => {
   const to = (i: number) => ({
     x: 0,
@@ -38,11 +35,6 @@ export const Deck: React.FC<IDeck> = ({
     z: -20,
   });
 
-  const trans = (r: number, s: number) =>
-    `perspective(1500px) rotateX(0deg) rotateY(${
-      r / 10
-    }deg) rotateZ(${r}deg) scale(${s})`;
-
   const [gone] = useState(() => new Set());
   const [props, api] = useSprings(cards.length, (i) => ({
     from: from(i),
@@ -59,7 +51,7 @@ export const Deck: React.FC<IDeck> = ({
       api.start((i) => {
         if (index !== i) return;
         const isGone = gone.has(index);
-        const x = isGone ? (200 + window.innerWidth) * dir : down ? mx : 0;
+        const x = isGone ? (300 + window.innerWidth * 2) * dir : down ? mx : 0;
         const rot = mx / 100 + (isGone ? dir * 10 * velocity : 0);
         const scale = down ? 1.1 : 1;
 
@@ -80,23 +72,50 @@ export const Deck: React.FC<IDeck> = ({
 
   return (
     <>
+      {console.log(loading)}
       <div className={styles.container}>
-        <div className={styles.deck}></div>
+        <div className={styles.deck}>
+          <Card>
+            {/* Не працює виправити */}
+            {loading ? (
+              <MagnifyingGlass
+                visible={true}
+                height="100"
+                width="100"
+                ariaLabel="MagnifyingGlass-loading"
+                wrapperStyle={{}}
+                wrapperClass="MagnifyingGlass-wrapper"
+                glassColor="#00ADB58f"
+                color="#222831"
+              />
+            ) : (
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  flexDirection: "column",
+                }}
+              >
+                <BlockIcon sx={{ height: "100px", width: "100px" }} />
+                <Typography>Unfortunately, there are no more offers</Typography>
+              </Box>
+            )}
+          </Card>
+        </div>
         {props.map(({ x, y, rot, scale }, i) => {
           return (
-            <>
-              <animated.div className={styles.deck} key={i} style={{ x, y }}>
-                <animated.div
-                  {...bind(i)}
-                  style={{
-                    transform: interpolate([rot, scale], trans),
-                    backgroundImage: `url(${cards[i]})`,
-                  }}
-                >
-                  {cards[i].title}
-                </animated.div>
-              </animated.div>
-            </>
+            <animated.div
+              className={styles.deck}
+              key={cards[i].id}
+              style={{ x, y }}
+            >
+              <Card
+                onDrag={{ ...bind(i) }}
+                to={[rot, scale]}
+                title={cards[i].title}
+                desc={cards[i].description}
+              />
+            </animated.div>
           );
         })}
       </div>

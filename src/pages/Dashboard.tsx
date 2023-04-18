@@ -10,7 +10,7 @@ export const Dashboard = () => {
   const navigate = useNavigate();
   const [offers, setOffers] = useState<any>();
   const [pagination, setPagination] = useState<any>();
-  const { fetchMore } = useQuery(GET_ALL_OFFERS, {
+  const { loading, fetchMore } = useQuery(GET_ALL_OFFERS, {
     variables: {
       page: 1,
       limit: 5,
@@ -63,13 +63,14 @@ export const Dashboard = () => {
       >
         <Sidebar />
         <Container sx={{ display: "flex", justifyContent: "space-evenly" }}>
-          <Box>{offers && <Deck cards={offers} fetch={() => fetch()} />}</Box>
+          <Box></Box>
           <Box>
             {offers && (
               <Deck
                 cards={offers}
                 pagination={pagination}
                 fetch={() => fetch()}
+                loading={loading}
               />
             )}
           </Box>

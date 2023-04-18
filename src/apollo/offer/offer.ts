@@ -6,6 +6,7 @@ export const GET_ALL_OFFERS = gql`
       items {
         id
         title
+        description
         user {
           id
         }
