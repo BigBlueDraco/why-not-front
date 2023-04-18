@@ -1,5 +1,5 @@
 import { Box, Container } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar/Sidebar";
 import { Deck } from "../components/Desk/desk";
@@ -8,13 +8,48 @@ import { GET_ALL_OFFERS } from "../apollo/offer/offer";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
-  const { data: offers } = useQuery(GET_ALL_OFFERS);
+  const [offers, setOffers] = useState<any>();
+  const [pagination, setPagination] = useState<any>();
+  const { fetchMore } = useQuery(GET_ALL_OFFERS, {
+    variables: {
+      page: 1,
+      limit: 5,
+    },
+    onCompleted: (data) => {
+      console.log(data);
+      const { items, pagination } = data.getAllOffers;
+      console.log(items);
+      if (data) {
+        setOffers(items);
+        setPagination(pagination);
+      }
+    },
+  });
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/");
     }
   });
+
+  const fetch = () => {
+    fetchMore({
+      variables: {
+        page: pagination.currentPage + 1,
+      },
+      updateQuery: (prevRes, { fetchMoreResult }) => {
+        const { items: prevItems } = prevRes.getAllOffers;
+        const { items, pagination } = fetchMoreResult.getAllOffers;
+        setPagination({ ...pagination });
+        return {
+          getAllOffers: {
+            items: [...prevItems, ...items],
+            pagination: { ...pagination },
+          },
+        };
+      },
+    });
+  };
 
   return (
     <>
@@ -27,9 +62,16 @@ export const Dashboard = () => {
         }}
       >
         <Sidebar />
-        <Container>
-          <Box sx={{ display: "flex", pt: 20 }}>
-            {offers && <Deck cardsArray={offers.getAllOffers} />}
+        <Container sx={{ display: "flex", justifyContent: "space-evenly" }}>
+          <Box>{offers && <Deck cards={offers} fetch={() => fetch()} />}</Box>
+          <Box>
+            {offers && (
+              <Deck
+                cards={offers}
+                pagination={pagination}
+                fetch={() => fetch()}
+              />
+            )}
           </Box>
         </Container>
       </Box>

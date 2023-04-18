@@ -1,18 +1,28 @@
 import { gql } from "@apollo/client";
 
 export const GET_ALL_OFFERS = gql`
-  query offers {
-    getAllOffers {
-      title
-      description
-      liked {
+  query offers($page: Float!, $limit: Float!) {
+    getAllOffers(page: $page, limit: $limit) {
+      items {
         id
+        title
+        user {
+          id
+        }
+        liked {
+          id
+        }
+        matches {
+          id
+          user {
+            id
+          }
+        }
       }
-      matches {
-        id
-      }
-      user {
-        id
+      pagination {
+        totalPages
+        currentPage
+        itemsPerPage
       }
     }
   }
