@@ -13,8 +13,8 @@
 }
 .deck {
   position: absolute;
-  width: 320px;
-  height: 200px;
+  min-width: 320px;
+  min-height: 200px;
   will-change: transform;
   display: flex;
   align-items: center;

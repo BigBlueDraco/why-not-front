@@ -17,7 +17,7 @@ export const Deck: React.FC<IDeck> = ({
   cards,
   fetch,
   pagination: { itemsPerPage, currentPage, totalPages },
-  loading,
+  loading = true,
 }) => {
   const to = (i: number) => ({
     x: 0,
@@ -30,8 +30,8 @@ export const Deck: React.FC<IDeck> = ({
   const from = (_i: number) => ({
     x: 0,
     rot: 0,
-    scale: 0.5,
-    y: -100,
+    scale: 1.2,
+    y: 0,
     z: -20,
   });
 
@@ -72,12 +72,11 @@ export const Deck: React.FC<IDeck> = ({
 
   return (
     <>
-      {console.log(loading)}
       <div className={styles.container}>
         <div className={styles.deck}>
           <Card>
             {/* Не працює виправити */}
-            {loading ? (
+            {loading && (
               <MagnifyingGlass
                 visible={true}
                 height="100"
@@ -88,7 +87,8 @@ export const Deck: React.FC<IDeck> = ({
                 glassColor="#00ADB58f"
                 color="#222831"
               />
-            ) : (
+            )}
+            {currentPage === totalPages && !loading && (
               <Box
                 sx={{
                   display: "flex",
