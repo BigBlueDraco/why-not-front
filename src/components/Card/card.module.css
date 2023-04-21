@@ -3,14 +3,18 @@
   background-size: auto 85%;
   background-repeat: no-repeat;
   background-position: center center;
-  width: 320px;
+  min-width: 320px;
   max-width: 320px;
-  height: 85vh;
+  min-height: 520px;
   max-height: 520px;
   will-change: transform;
   border-radius: 10px;
   background-color: brown;
   box-shadow: 0 4px 40px -20px rgba(50, 50, 73, 0.1),
     0 3px 5px -2px rgba(50, 50, 73, 0.1);
-  padding: 16px 8px;
+  /* padding: 16px 8px; */
+  border: 0;
+  margin: 0;
+  display: block;
+  box-sizing: content-box;
 }
