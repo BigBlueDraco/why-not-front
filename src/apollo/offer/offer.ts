@@ -28,3 +28,22 @@ export const GET_ALL_OFFERS = gql`
     }
   }
 `;
+
+export const GET_OFFER_BY_ID = gql`
+  query GetOfferById($id: Int!) {
+    getOfferById(id: $id) {
+      id
+      title
+      description
+      user {
+        id
+      }
+      liked {
+        id
+      }
+      matches {
+        id
+      }
+    }
+  }
+`;

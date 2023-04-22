@@ -1,30 +1,31 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSprings, animated } from "@react-spring/web";
 import { useDrag } from "react-use-gesture";
 import styles from "./desk.module.css";
 import { Card } from "../Card/Card";
-import { MagnifyingGlass } from "react-loader-spinner";
-import BlockIcon from "@mui/icons-material/Block";
-import { Box, Typography } from "@mui/material";
 
 interface IDeck {
   cards: any;
   fetch: Function;
   pagination?: any;
   loading?: boolean;
+  children?: React.ReactNode;
+  onSwipe?(movement: number): void;
 }
 export const Deck: React.FC<IDeck> = ({
-  cards,
+  cards = [],
   fetch,
-  pagination: { itemsPerPage, currentPage, totalPages },
+  pagination = { itemsPerPage: 1, currentPage: 1, totalPages: 0 },
   loading = true,
+  children,
+  onSwipe = () => {},
 }) => {
   const to = (i: number) => ({
     x: 0,
     y: i * -0.2,
     z: 0,
     scale: 1,
-    rot: 10 - Math.random() * 20,
+    rot: 5 - Math.random() * 10,
     delay: 0,
   });
   const from = (_i: number) => ({
@@ -32,7 +33,6 @@ export const Deck: React.FC<IDeck> = ({
     rot: 0,
     scale: 1.2,
     y: 0,
-    z: -20,
   });
 
   const [gone] = useState(() => new Set());
@@ -46,8 +46,10 @@ export const Deck: React.FC<IDeck> = ({
       const trigger = velocity > 0.2;
       const dir = xDir < 0 ? -1 : 1;
       if (!down && trigger) {
+        onSwipe(mx);
         gone.add(index);
       }
+
       api.start((i) => {
         if (index !== i) return;
         const isGone = gone.has(index);
@@ -63,8 +65,10 @@ export const Deck: React.FC<IDeck> = ({
           config: { friction: 50, tension: down ? 800 : isGone ? 200 : 500 },
         };
       });
-      if (!down && gone.size >= itemsPerPage && currentPage !== totalPages) {
+      if (!down && gone.size >= pagination.itemsPerPage) {
         gone.clear();
+        console.log(cards[cards.length - 1]);
+        console.log(gone);
         fetch();
       }
     }
@@ -73,51 +77,24 @@ export const Deck: React.FC<IDeck> = ({
   return (
     <>
       <div className={styles.container}>
-        <div className={styles.deck}>
-          <Card>
-            {/* Не працює виправити */}
-            {loading && (
-              <MagnifyingGlass
-                visible={true}
-                height="100"
-                width="100"
-                ariaLabel="MagnifyingGlass-loading"
-                wrapperStyle={{}}
-                wrapperClass="MagnifyingGlass-wrapper"
-                glassColor="#00ADB58f"
-                color="#222831"
-              />
-            )}
-            {currentPage === totalPages && !loading && (
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  flexDirection: "column",
-                }}
+        <div className={styles.deck}>{children}</div>
+        {props &&
+          props.map(({ x, y, rot, scale }, i) => {
+            return (
+              <animated.div
+                className={styles.deck}
+                key={cards[i].id * Math.random()}
+                style={{ x, y }}
               >
-                <BlockIcon sx={{ height: "100px", width: "100px" }} />
-                <Typography>Unfortunately, there are no more offers</Typography>
-              </Box>
-            )}
-          </Card>
-        </div>
-        {props.map(({ x, y, rot, scale }, i) => {
-          return (
-            <animated.div
-              className={styles.deck}
-              key={cards[i].id}
-              style={{ x, y }}
-            >
-              <Card
-                onDrag={{ ...bind(i) }}
-                to={[rot, scale]}
-                title={cards[i].title}
-                desc={cards[i].description}
-              />
-            </animated.div>
-          );
-        })}
+                <Card
+                  onDrag={{ ...bind(i) }}
+                  to={[rot, scale]}
+                  title={cards[i].title}
+                  desc={cards[i].description}
+                />
+              </animated.div>
+            );
+          })}
       </div>
     </>
   );

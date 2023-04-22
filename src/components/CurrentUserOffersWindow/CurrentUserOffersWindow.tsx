@@ -82,6 +82,7 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
                 >
                   <Card
                     onClick={() => {
+                      console.log(id);
                       onChoice(id);
                       onClose();
                     }}
