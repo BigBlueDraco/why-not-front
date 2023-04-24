@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 interface IUseResetForm {
-  reset: Function;
+  reset(): void;
   isSubmitSuccessful: Boolean;
 }
 export const useResetForm = ({ reset, isSubmitSuccessful }: IUseResetForm) => {

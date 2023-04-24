@@ -47,3 +47,19 @@ export const GET_OFFER_BY_ID = gql`
     }
   }
 `;
+
+export const CREATE_OFFER_MUTATION = gql`
+  mutation CreateOffer($data: CreateOfferInput!) {
+    createOffer(createOfferInput: $data) {
+      title
+      description
+      updatedAt
+      createdAt
+      user {
+        id
+        email
+        last_name
+      }
+    }
+  }
+`;

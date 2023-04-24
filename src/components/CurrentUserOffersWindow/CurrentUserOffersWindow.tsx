@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { GET_CURRENT_USER } from "../../apollo/User/user";
 import { FallingLines } from "react-loader-spinner";
+import AddIcon from "@mui/icons-material/Add";
+import { CreateOfferForm } from "../AddOfferForm/AddOfferForm";
 
 interface ICurrentUserOffersWindow {
   open: boolean;
@@ -17,6 +19,7 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
   onChoice,
 }) => {
   const [offers, setOffers] = useState<any[]>([]);
+  const [isAddOfferFormOpen, setIsAddOfferFormOpen] = useState<boolean>(true);
   const navigate = useNavigate();
   const { error, loading } = useQuery(GET_CURRENT_USER, {
     onCompleted: (data) => {
@@ -32,8 +35,8 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
     <Modal open={open} onClose={onClose}>
       <Box
         sx={{
-          minHeight: "80vh",
-          maxHeight: "80vh",
+          minHeight: "560px",
+          maxHeight: "560px",
           minWidth: 320 * 4,
           maxWidth: 320 * 4,
           position: "absolute" as "absolute",
@@ -44,55 +47,83 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
           boxShadow: 24,
           p: 4,
           overflowY: "scroll",
+          overflowX: "hidden",
           display: "flex",
         }}
       >
-        {loading && (
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              minHeight: "80vh",
-              maxHeight: "80vh",
-              minWidth: 320 * 4,
-              maxWidth: 320 * 4,
-            }}
-          >
-            <FallingLines color="#4fa94d" width="100" visible={loading} />
-          </Box>
-        )}
-        {offers && !error && !loading && (
-          <Grid container spacing={4}>
-            {offers?.map(
-              ({
-                id,
-                description,
-                title,
-              }: {
-                id: number;
-                description: string;
-                title: string;
-              }) => (
+        {isAddOfferFormOpen ? (
+          <>
+            <CreateOfferForm />
+          </>
+        ) : (
+          <>
+            {loading ? (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  minHeight: "560px",
+                  maxHeight: "560px",
+                  minWidth: 320 * 4,
+                  maxWidth: 320 * 4,
+                }}
+              >
+                <FallingLines color="#4fa94d" width="100" visible={loading} />
+              </Box>
+            ) : (
+              <Grid container spacing={4}>
+                {offers &&
+                  !error &&
+                  offers?.map(
+                    ({
+                      id,
+                      description,
+                      title,
+                    }: {
+                      id: number;
+                      description: string;
+                      title: string;
+                    }) => (
+                      <Grid
+                        key={id}
+                        sx={{ display: "flex", justifyContent: "center" }}
+                        item
+                        xs={4}
+                      >
+                        <Card
+                          onClick={() => {
+                            onChoice(id);
+                            onClose();
+                          }}
+                          title={title}
+                          desc={description}
+                        />
+                      </Grid>
+                    )
+                  )}
                 <Grid
-                  key={id}
                   sx={{ display: "flex", justifyContent: "center" }}
                   item
                   xs={4}
                 >
                   <Card
                     onClick={() => {
-                      console.log(id);
-                      onChoice(id);
-                      onClose();
+                      console.log("click");
                     }}
-                    title={title}
-                    desc={description}
-                  />
+                  >
+                    <AddIcon
+                      color="action"
+                      sx={{
+                        height: "100px",
+                        width: "100px",
+                      }}
+                    />
+                  </Card>
                 </Grid>
-              )
+              </Grid>
             )}
-          </Grid>
+          </>
         )}
       </Box>
     </Modal>
