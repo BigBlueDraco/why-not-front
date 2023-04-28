@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useSprings, animated } from "@react-spring/web";
+import { animated, useSprings } from "@react-spring/web";
+import React, { useState } from "react";
 import { useDrag } from "react-use-gesture";
-import styles from "./desk.module.css";
 import { Card } from "../Card/Card";
+import styles from "./desk.module.css";
 
 interface IDeck {
   cards: any;
@@ -10,7 +10,7 @@ interface IDeck {
   pagination?: any;
   loading?: boolean;
   children?: React.ReactNode;
-  onSwipe?(movement: number): void;
+  onSwipe?(movement: number, ...args: any): void;
 }
 export const Deck: React.FC<IDeck> = ({
   cards = [],
@@ -46,7 +46,9 @@ export const Deck: React.FC<IDeck> = ({
       const trigger = velocity > 0.2;
       const dir = xDir < 0 ? -1 : 1;
       if (!down && trigger) {
-        onSwipe(mx);
+        console.log(index);
+        console.log(cards[index].id);
+        onSwipe(mx, cards[index].id);
         gone.add(index);
       }
 
@@ -67,8 +69,6 @@ export const Deck: React.FC<IDeck> = ({
       });
       if (!down && gone.size >= pagination.itemsPerPage) {
         gone.clear();
-        console.log(cards[cards.length - 1]);
-        console.log(gone);
         fetch();
       }
     }

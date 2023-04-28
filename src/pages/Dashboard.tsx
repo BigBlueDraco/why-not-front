@@ -3,13 +3,14 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar/Sidebar";
 import { Deck } from "../components/Desk/desk";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { GET_ALL_OFFERS, GET_OFFER_BY_ID } from "../apollo/offer/offer";
 import { Card } from "../components/Card/Card";
 import BlockIcon from "@mui/icons-material/Block";
 import MenuIcon from "@mui/icons-material/Menu";
 import { CurrentUserOffersWindow } from "../components/CurrentUserOffersWindow/CurrentUserOffersWindow";
 import { MagnifyingGlass } from "react-loader-spinner";
+import { CREATE_GRADE_MUTATION } from "../apollo/LIke/like";
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ export const Dashboard = () => {
       }
     },
   });
+  const [createGrade, { data }] = useMutation(CREATE_GRADE_MUTATION);
   useEffect(() => {
     if (!localStorage.getItem("token")) {
       navigate("/");
@@ -49,14 +51,30 @@ export const Dashboard = () => {
         id: +id,
       },
       updateQuery: (prev, { fetchMoreResult: { getOfferById } }) => {
-        getOfferById && console.log([getOfferById]);
         getOfferById &&
           setCurrentUserOffer((prev: any) => [...prev, { ...getOfferById }]);
       },
     });
   };
-  const onAllUsersSwipe = (movement: number): void => {
-    console.log(movement);
+  const onAllOfferSwipe = async (
+    movement: number,
+    ...args: any
+  ): Promise<void> => {
+    console.log(currentUserOffer);
+    const data = {
+      givenId: +currentUserOffer[0].id,
+      receivedId: +args[0],
+      isLiked: movement < 0,
+    };
+    console.log(data);
+    createGrade({
+      variables: {
+        data: { ...data },
+      },
+      onCompleted: (data) => {
+        console.log(data);
+      },
+    });
   };
   const onUserOfferSwipe = (movement: number): void => {
     setTimeout(() => {
@@ -150,7 +168,7 @@ export const Dashboard = () => {
                   pagination={pagination}
                   fetch={fetch}
                   loading={isOffersLoading || loading}
-                  onSwipe={onAllUsersSwipe}
+                  onSwipe={onAllOfferSwipe}
                 >
                   <Card>
                     {isOffersLoading && (

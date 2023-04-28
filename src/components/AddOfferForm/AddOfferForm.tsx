@@ -5,17 +5,24 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
 import { CREATE_OFFER_MUTATION } from "../../apollo/offer/offer";
 import { useResetForm } from "../../hooks/useResetForm";
-import { TextareaAutosize } from "@mui/base";
+import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {
   Box,
   Button,
   Grid,
+  IconButton,
   TextField,
   Typography,
   useTheme,
 } from "@mui/material";
+import React from "react";
 
-export const CreateOfferForm = () => {
+interface ICreateOfferForm {
+  onClose?(): void;
+}
+export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
+  onClose = () => {},
+}) => {
   const theme = useTheme();
 
   const {
@@ -47,6 +54,17 @@ export const CreateOfferForm = () => {
         gap: 4,
       }}
     >
+      <IconButton
+        onClick={() => onClose()}
+        sx={{
+          position: "absolute",
+          left: 4,
+          top: 4,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <ArrowBackIosIcon />
+      </IconButton>
       <Typography
         align="center"
         variant="h1"

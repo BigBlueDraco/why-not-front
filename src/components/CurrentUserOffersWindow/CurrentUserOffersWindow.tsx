@@ -1,4 +1,4 @@
-import { Box, Grid, Modal } from "@mui/material";
+import { Box, Grid, IconButton, Modal } from "@mui/material";
 import { Card } from "../Card/Card";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +7,8 @@ import { GET_CURRENT_USER } from "../../apollo/User/user";
 import { FallingLines } from "react-loader-spinner";
 import AddIcon from "@mui/icons-material/Add";
 import { CreateOfferForm } from "../AddOfferForm/AddOfferForm";
+import CloseIcon from "@mui/icons-material/Close";
+import { useSaveJWTtoLocaleStorage } from "../../hooks/useSaveJWTtoLocaleStorage";
 
 interface ICurrentUserOffersWindow {
   open: boolean;
@@ -19,7 +21,7 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
   onChoice,
 }) => {
   const [offers, setOffers] = useState<any[]>([]);
-  const [isAddOfferFormOpen, setIsAddOfferFormOpen] = useState<boolean>(true);
+  const [isAddOfferFormOpen, setIsAddOfferFormOpen] = useState<boolean>(false);
   const navigate = useNavigate();
   const { error, loading } = useQuery(GET_CURRENT_USER, {
     onCompleted: (data) => {
@@ -29,6 +31,7 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
   useEffect(() => {
     if (error?.message === "Unauthorized") {
       navigate("/");
+      localStorage.setItem("token", "");
     }
   }, [error, navigate]);
   return (
@@ -51,9 +54,23 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
           display: "flex",
         }}
       >
+        <IconButton
+          onClick={() => {
+            setIsAddOfferFormOpen(false);
+            onClose();
+          }}
+          sx={{
+            position: "absolute",
+            right: 2,
+            top: 2,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
         {isAddOfferFormOpen ? (
           <>
-            <CreateOfferForm />
+            <CreateOfferForm onClose={() => setIsAddOfferFormOpen(false)} />
           </>
         ) : (
           <>
@@ -109,7 +126,7 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
                 >
                   <Card
                     onClick={() => {
-                      console.log("click");
+                      setIsAddOfferFormOpen(true);
                     }}
                   >
                     <AddIcon

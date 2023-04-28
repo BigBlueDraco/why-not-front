@@ -10,14 +10,11 @@ export const GET_ALL_OFFERS = gql`
         user {
           id
         }
-        liked {
+        grades {
           id
         }
         matches {
           id
-          user {
-            id
-          }
         }
       }
       pagination {
@@ -36,9 +33,6 @@ export const GET_OFFER_BY_ID = gql`
       title
       description
       user {
-        id
-      }
-      liked {
         id
       }
       matches {
