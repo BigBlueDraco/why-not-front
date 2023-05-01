@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { Sidebar } from "../components/Sidebar/Sidebar";
 import { Deck } from "../components/Desk/desk";
 import { useMutation, useQuery } from "@apollo/client";
-import { GET_ALL_OFFERS, GET_OFFER_BY_ID } from "../apollo/offer/offer";
+import {
+  GET_ALL_OFFERS,
+  GET_OFFERS_FOR_USER,
+  GET_OFFER_BY_ID,
+} from "../apollo/offer/offer";
 import { Card } from "../components/Card/Card";
 import BlockIcon from "@mui/icons-material/Block";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -17,17 +21,17 @@ export const Dashboard = () => {
   const [offers, setOffers] = useState<any>();
   const [pagination, setPagination] = useState<any>();
   const [isOffersLoading, setIsOffersLoading] = useState<boolean>(true);
-  const [isUserOfferLoading, setIsUserOffersLoading] = useState<boolean>(true);
+  const [isSwipebel, setIsSwipebel] = useState<boolean>(false);
   const [isChousenOffersListOpen, setIsChousenOffersListOpen] =
     useState<boolean>(false);
   const [currentUserOffer, setCurrentUserOffer] = useState<any>([]);
-  const { loading, fetchMore } = useQuery(GET_ALL_OFFERS, {
+  const { loading, fetchMore } = useQuery(GET_OFFERS_FOR_USER, {
     variables: {
       page: 1,
       limit: 5,
     },
     onCompleted: (data) => {
-      const { items, pagination } = data.getAllOffers;
+      const { items, pagination } = data.getOffersForUser;
       if (data) {
         setOffers(items);
         setPagination(pagination);
@@ -53,6 +57,7 @@ export const Dashboard = () => {
       updateQuery: (prev, { fetchMoreResult: { getOfferById } }) => {
         getOfferById &&
           setCurrentUserOffer((prev: any) => [...prev, { ...getOfferById }]);
+        setIsSwipebel(true);
       },
     });
   };
@@ -60,13 +65,11 @@ export const Dashboard = () => {
     movement: number,
     ...args: any
   ): Promise<void> => {
-    console.log(currentUserOffer);
     const data = {
       givenId: +currentUserOffer[0].id,
       receivedId: +args[0],
       isLiked: movement < 0,
     };
-    console.log(data);
     createGrade({
       variables: {
         data: { ...data },
@@ -77,9 +80,10 @@ export const Dashboard = () => {
     });
   };
   const onUserOfferSwipe = (movement: number): void => {
+    setIsSwipebel(false);
     setTimeout(() => {
       setCurrentUserOffer([]);
-    }, 500);
+    }, 200);
   };
 
   const fetch = () => {
@@ -169,6 +173,7 @@ export const Dashboard = () => {
                   fetch={fetch}
                   loading={isOffersLoading || loading}
                   onSwipe={onAllOfferSwipe}
+                  isSwipebel={isSwipebel}
                 >
                   <Card>
                     {isOffersLoading && (

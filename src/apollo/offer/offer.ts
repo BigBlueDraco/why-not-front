@@ -25,6 +25,31 @@ export const GET_ALL_OFFERS = gql`
     }
   }
 `;
+export const GET_OFFERS_FOR_USER = gql`
+  query offers($page: Float!, $limit: Float!) {
+    getOffersForUser(page: $page, limit: $limit) {
+      items {
+        id
+        title
+        description
+        user {
+          id
+        }
+        grades {
+          id
+        }
+        matches {
+          id
+        }
+      }
+      pagination {
+        totalPages
+        currentPage
+        itemsPerPage
+      }
+    }
+  }
+`;
 
 export const GET_OFFER_BY_ID = gql`
   query GetOfferById($id: Int!) {

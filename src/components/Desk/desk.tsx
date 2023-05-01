@@ -6,19 +6,21 @@ import styles from "./desk.module.css";
 
 interface IDeck {
   cards: any;
-  fetch: Function;
+  fetch(): void;
   pagination?: any;
   loading?: boolean;
   children?: React.ReactNode;
+  isSwipebel?: boolean;
   onSwipe?(movement: number, ...args: any): void;
 }
 export const Deck: React.FC<IDeck> = ({
   cards = [],
-  fetch,
   pagination = { itemsPerPage: 1, currentPage: 1, totalPages: 0 },
   loading = true,
-  children,
+  isSwipebel = true,
   onSwipe = () => {},
+  fetch = () => {},
+  children,
 }) => {
   const to = (i: number) => ({
     x: 0,
@@ -46,8 +48,6 @@ export const Deck: React.FC<IDeck> = ({
       const trigger = velocity > 0.2;
       const dir = xDir < 0 ? -1 : 1;
       if (!down && trigger) {
-        console.log(index);
-        console.log(cards[index].id);
         onSwipe(mx, cards[index].id);
         gone.add(index);
       }
@@ -87,7 +87,7 @@ export const Deck: React.FC<IDeck> = ({
                 style={{ x, y }}
               >
                 <Card
-                  onDrag={{ ...bind(i) }}
+                  onDrag={isSwipebel && { ...bind(i) }}
                   to={[rot, scale]}
                   title={cards[i].title}
                   desc={cards[i].description}
