@@ -1,10 +1,5 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateOfferInput, CreateOfferSchema } from "./addOffer.schema";
-import { RegisterInput } from "../RegistrationForm/register.schema";
-import { SubmitHandler, useForm } from "react-hook-form";
 import { useMutation } from "@apollo/client";
-import { CREATE_OFFER_MUTATION } from "../../apollo/offer/offer";
-import { useResetForm } from "../../hooks/useResetForm";
+import { zodResolver } from "@hookform/resolvers/zod";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {
   Box,
@@ -16,6 +11,10 @@ import {
   useTheme,
 } from "@mui/material";
 import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { CREATE_OFFER_MUTATION } from "../../apollo/offer/offer";
+import { useResetForm } from "../../hooks/useResetForm";
+import { CreateOfferInput, CreateOfferSchema } from "./addOffer.schema";
 
 interface ICreateOfferForm {
   onClose?(): void;
@@ -31,7 +30,7 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
     reset,
     handleSubmit,
   } = useForm<CreateOfferInput>({ resolver: zodResolver(CreateOfferSchema) });
-  const [cteateOffer, { data }] = useMutation(CREATE_OFFER_MUTATION);
+  const [cteateOffer] = useMutation(CREATE_OFFER_MUTATION);
 
   const onSubmitHandler: SubmitHandler<CreateOfferInput> = async (values) => {
     await cteateOffer({

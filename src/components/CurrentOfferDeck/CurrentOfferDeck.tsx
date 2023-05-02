@@ -1,16 +1,17 @@
-import { Button } from "@mui/material";
-import { Deck } from "../Desk/desk";
+import { useQuery } from "@apollo/client";
 import MenuIcon from "@mui/icons-material/Menu";
+import { Button } from "@mui/material";
 import { useState } from "react";
 import { GET_OFFER_BY_ID } from "../../apollo/offer/offer";
-import { useQuery } from "@apollo/client";
-import { CurrentUserOffersWindow } from "../CurrentUserOffersWindow/CurrentUserOffersWindow";
+import { useAppDispath } from "../../hooks/useCustomRedux";
+import { changeId, removeId } from "../../redux/gradeSlice";
 import { Card } from "../Card/Card";
+import { CurrentUserOffersWindow } from "../CurrentUserOffersWindow/CurrentUserOffersWindow";
+import { Deck } from "../Desk/desk";
 
 export const CurrentOfferDeck: React.FC = () => {
+  const dispath = useAppDispath();
   const [currentUserOffer, setCurrentUserOffer] = useState<any>([]);
-  const [isSwipebel, setIsSwipebel] = useState<boolean>(false);
-  const [isOffersLoading, setIsOffersLoading] = useState<boolean>(true);
   const [isChousenOffersListOpen, setIsChousenOffersListOpen] =
     useState<boolean>(false);
   const { fetchMore: fetchMoreByID } = useQuery(GET_OFFER_BY_ID, {
@@ -20,7 +21,7 @@ export const CurrentOfferDeck: React.FC = () => {
   });
 
   const onUserOfferSwipe = (movement: number): void => {
-    setIsSwipebel(false);
+    dispath(removeId());
     setTimeout(() => {
       setCurrentUserOffer([]);
     }, 200);
@@ -34,7 +35,7 @@ export const CurrentOfferDeck: React.FC = () => {
       updateQuery: (prev, { fetchMoreResult: { getOfferById } }) => {
         getOfferById &&
           setCurrentUserOffer((prev: any) => [...prev, { ...getOfferById }]);
-        setIsSwipebel(true);
+        dispath(changeId(id));
       },
     });
   };
@@ -52,7 +53,6 @@ export const CurrentOfferDeck: React.FC = () => {
         <Deck
           cards={currentUserOffer}
           fetch={() => {}}
-          loading={isOffersLoading}
           onSwipe={onUserOfferSwipe}
         >
           <Card>

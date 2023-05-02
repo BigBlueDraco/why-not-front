@@ -10,17 +10,20 @@ import ThemeProvider from "@mui/material/styles/ThemeProvider";
 import { ApolloProvider } from "@apollo/client";
 import { client } from "./apollo/client";
 import { theme } from "./themes/themeMaterialUI";
-
+import { Provider } from "react-redux";
+import { store } from "./redux/index";
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 
 root.render(
   <React.StrictMode>
-    <ApolloProvider client={client}>
-      <ThemeProvider theme={theme}>
-        <App />
-      </ThemeProvider>
-    </ApolloProvider>
+    <Provider store={store}>
+      <ApolloProvider client={client}>
+        <ThemeProvider theme={theme}>
+          <App />
+        </ThemeProvider>
+      </ApolloProvider>
+    </Provider>
   </React.StrictMode>
 );

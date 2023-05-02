@@ -1,14 +1,13 @@
-import { Box, Grid, IconButton, Modal } from "@mui/material";
-import { Card } from "../Card/Card";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { GET_CURRENT_USER } from "../../apollo/User/user";
-import { FallingLines } from "react-loader-spinner";
 import AddIcon from "@mui/icons-material/Add";
-import { CreateOfferForm } from "../AddOfferForm/AddOfferForm";
 import CloseIcon from "@mui/icons-material/Close";
-import { useSaveJWTtoLocaleStorage } from "../../hooks/useSaveJWTtoLocaleStorage";
+import { Box, Grid, IconButton, Modal } from "@mui/material";
+import { useEffect, useState } from "react";
+import { FallingLines } from "react-loader-spinner";
+import { useNavigate } from "react-router-dom";
+import { GET_CURRENT_USER } from "../../apollo/User/user";
+import { CreateOfferForm } from "../AddOfferForm/AddOfferForm";
+import { Card } from "../Card/Card";
 
 interface ICurrentUserOffersWindow {
   open: boolean;

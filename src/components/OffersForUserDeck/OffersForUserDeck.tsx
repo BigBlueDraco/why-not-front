@@ -7,20 +7,16 @@ import { Card } from "../Card/Card";
 import { Box, Typography } from "@mui/material";
 import BlockIcon from "@mui/icons-material/Block";
 import { MagnifyingGlass } from "react-loader-spinner";
+import { useAppSelector } from "../../hooks/useCustomRedux";
 
-interface IOffersForUserDesk {
-  id?: number;
-  isSwipebel?: boolean;
-}
-export const OffersForUserDesk: React.FC<IOffersForUserDesk> = ({
-  id,
-  isSwipebel = false,
-}) => {
+export const OffersForUserDesk: React.FC = () => {
+  const givenId = useAppSelector((state) => state.grade.givenId);
+
   const [offers, setOffers] = useState<any>();
   const [pagination, setPagination] = useState<any>();
   const [isOffersLoading, setIsOffersLoading] = useState<boolean>(true);
-  // const [isSwipebel, setIsSwipebel] = useState<boolean>(false);
-  const [createGrade, { data }] = useMutation(CREATE_GRADE_MUTATION);
+
+  const [createGrade] = useMutation(CREATE_GRADE_MUTATION);
   const { loading, fetchMore } = useQuery(GET_OFFERS_FOR_USER, {
     variables: {
       page: 1,
@@ -38,11 +34,14 @@ export const OffersForUserDesk: React.FC<IOffersForUserDesk> = ({
     movement: number,
     ...args: any
   ): Promise<void> => {
+    console.log(givenId);
+    if (!!!givenId) return;
     const data = {
-      givenId: id,
+      givenId: +givenId,
       receivedId: +args[0],
       isLiked: movement < 0,
     };
+    console.log(data);
     createGrade({
       variables: {
         data: { ...data },
@@ -81,7 +80,7 @@ export const OffersForUserDesk: React.FC<IOffersForUserDesk> = ({
         fetch={fetch}
         loading={isOffersLoading || loading}
         onSwipe={onOfferSwipe}
-        isSwipebel={isSwipebel}
+        isSwipebel={!!givenId}
       >
         <Card>
           {isOffersLoading && (
