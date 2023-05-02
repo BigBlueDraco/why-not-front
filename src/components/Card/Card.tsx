@@ -1,9 +1,9 @@
 import { animated, to as interpolate } from "@react-spring/web";
 import styles from "./card.module.css";
-import React from "react";
+import React, { HTMLAttributes } from "react";
 import { Box, Typography } from "@mui/material";
 
-interface ICard {
+interface ICard extends HTMLAttributes<HTMLDivElement> {
   to?: [rot: any, scale?: any];
   onDrag?: any;
   title?: string;
@@ -18,6 +18,7 @@ export const Card: React.FC<ICard> = ({
   desc = "",
   children,
   onClick = () => {},
+  ...props
 }) => {
   const trans = (r: number, s: number) =>
     `perspective(1500px) rotateX(0deg) rotateY(${
@@ -25,6 +26,7 @@ export const Card: React.FC<ICard> = ({
     }deg) rotateZ(${r}deg) scale(${s})`;
   return (
     <animated.div
+      {...props}
       onClick={onClick}
       {...onDrag}
       className={styles.card}
@@ -40,8 +42,8 @@ export const Card: React.FC<ICard> = ({
         children
       ) : (
         <Box sx={{ p: "16px 8px" }}>
-          <Typography>{title}</Typography>
-          <Typography>{desc}</Typography>
+          <Typography id="title">{title}</Typography>
+          <Typography id="desc">{desc}</Typography>
           <img src="" alt="" />
         </Box>
       )}
