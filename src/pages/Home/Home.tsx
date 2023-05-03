@@ -21,7 +21,7 @@ export const Home = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          height: "80vh",
+          height: "95vh",
           justifyContent: "center",
         }}
       >
@@ -38,7 +38,8 @@ export const Home = () => {
             align="center"
             variant="h1"
             fontWeight={theme.typography.fontWeightBold}
-            color="common.black"
+            fontFamily={theme.typography.fontFamily}
+            color={theme.palette.text.primary}
           >
             Гортай праворуч
           </Typography>

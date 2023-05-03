@@ -20,7 +20,7 @@ const currentUserMock = {
 
 describe("Sidebar component", () => {
   it("renders the component with the matches tab", async () => {
-    render(
+    const { getByRole, getByText } = render(
       <MockedProvider mocks={[currentUserMock]} addTypename={false}>
         <MemoryRouter>
           <Sidebar />
@@ -32,24 +32,12 @@ describe("Sidebar component", () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
     });
 
-    const matchesTab = screen.getByRole("tabpanel");
-    const header = screen.getByRole("banner");
-    const offersTab = screen.getByRole("tabpanel");
-    const messagesTab = screen.getByRole("tabpanel");
+    expect(getByRole("tabpanel")).toBeInTheDocument();
+    expect(getByRole("banner")).toBeInTheDocument();
 
-    expect(matchesTab).toBeInTheDocument();
-    expect(header).toBeInTheDocument();
-    expect(offersTab).toBeInTheDocument();
-    expect(messagesTab).toBeInTheDocument();
-
-    const matchesContent = screen.getByText(/matches/i);
-    expect(matchesContent).toBeInTheDocument();
-
-    const offersContent = screen.queryByText(/offers/i);
-    expect(offersContent).toBeInTheDocument();
-
-    const messagesContent = screen.getByText(/messages/i);
-    expect(messagesContent).toBeInTheDocument();
+    expect(getByText(/matches/i)).toBeInTheDocument();
+    expect(getByText(/offers/i)).toBeInTheDocument();
+    expect(getByText(/messages/i)).toBeInTheDocument();
   });
 
   it("renders the component with an unauthorized user corect", async () => {

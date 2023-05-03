@@ -97,14 +97,14 @@ export const Sidebar = () => {
         <Box
           sx={{
             position: "relative",
-            maxHeight: "80vh",
+            maxHeight: "90vh",
           }}
         >
           <List
             sx={{
               mt: 0,
               minHeight: "100%",
-              maxHeight: "65vh",
+              maxHeight: "70vh",
               overflowY: "scroll",
               mb: 4,
             }}

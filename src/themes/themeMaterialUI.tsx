@@ -27,6 +27,23 @@ export const theme = createTheme({
       },
     },
   },
+  palette: {
+    primary: {
+      main: "#439A97",
+    },
+    secondary: {
+      main: "#BAE2BE",
+    },
+    text: {
+      primary: "#010E1D",
+    },
+    background: {
+      default: "#F5F5FF",
+    },
+  },
+  typography: {
+    fontFamily: "Roboto",
+  },
 });
 
 theme.typography.h1 = {

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { GET_CURRENT_USER } from "../../apollo/User/user";
 import { CreateOfferForm } from "../AddOfferForm/AddOfferForm";
 import { Card } from "../Card/Card";
+import { theme } from "../../themes/themeMaterialUI";
 
 interface ICurrentUserOffersWindow {
   open: boolean;
@@ -38,14 +39,14 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
       <Box
         sx={{
           minHeight: "560px",
-          maxHeight: "560px",
+          maxHeight: "75vh",
           minWidth: 320 * 4,
           maxWidth: 320 * 4,
           position: "absolute" as "absolute",
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          bgcolor: "background.paper",
+          bgcolor: "background.default",
           boxShadow: 24,
           p: 4,
           overflowY: "scroll",

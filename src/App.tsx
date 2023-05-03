@@ -3,6 +3,8 @@ import { Home } from "./pages/Home/Home";
 import { Dashboard } from "./pages/Dashboard";
 import { Onbording } from "./pages/Onbording";
 import { Layout } from "./components/Layout/Layout";
+import { Box } from "@mui/material";
+import { useTheme } from "styled-components";
 
 function App() {
   return (
