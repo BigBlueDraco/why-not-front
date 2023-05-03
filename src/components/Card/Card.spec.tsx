@@ -11,12 +11,14 @@ describe("Card", () => {
     ),
     onClick: jest.fn(),
   };
+
   it("should rendered", () => {
     const { getByTestId } = render(
       <Card data-testid={testData.id} title={testData.title} />
     );
     expect(getByTestId(testData.id)).toBeInTheDocument();
   });
+
   it("should render title and description corect", () => {
     const { getByTestId, getByText } = render(
       <Card
@@ -29,6 +31,7 @@ describe("Card", () => {
     expect(getByText(testData.title)).toBeInTheDocument();
     expect(getByText(testData.desc)).toBeInTheDocument();
   });
+
   it("should render child corect", () => {
     const { getByTestId, getByText, queryByText } = render(
       <Card

@@ -17,7 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GET_CURRENT_USER } from "../../apollo/User/user";
-import { SidebarTabPanel } from "./SidebarTabPanel";
+import { SidebarTabPanel } from "../SidebarTabPanel/SidebarTabPanel";
 
 export const Sidebar = () => {
   const theme = useTheme();
@@ -27,11 +27,13 @@ export const Sidebar = () => {
     setValue(newValue);
   };
   const { error, data: currentUserData } = useQuery(GET_CURRENT_USER);
+
   useEffect(() => {
     if (error?.message === "Unauthorized") {
       navigate("/");
     }
   }, [error, navigate]);
+
   return (
     <Box
       sx={{
@@ -81,15 +83,16 @@ export const Sidebar = () => {
           zIndex: "10",
         }}
       >
-        <Tab sx={{ p: 1 }} label="Matches" />
-        <Tab sx={{ p: 1 }} label="Offers" />
-        <Tab sx={{ p: 1 }} label="Messages" />
+        <Tab role="tab" sx={{ p: 1 }} label="Matches" />
+        <Tab role="tab" sx={{ p: 1 }} label="Offers" />
+        <Tab role="tab" sx={{ p: 1 }} label="Messages" />
       </Tabs>
       <SidebarTabPanel value={value} index={0} dir={theme.direction}>
         <List>
           <ListItem>Matches</ListItem>
         </List>
       </SidebarTabPanel>
+
       <SidebarTabPanel value={value} index={1} dir={theme.direction}>
         <Box
           sx={{
@@ -130,6 +133,7 @@ export const Sidebar = () => {
           </Button>
         </Box>
       </SidebarTabPanel>
+
       <SidebarTabPanel value={value} index={2} dir={theme.direction}>
         <List>
           <ListItem>Messages</ListItem>
