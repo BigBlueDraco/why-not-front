@@ -10,7 +10,7 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { CREATE_OFFER_MUTATION } from "../../apollo/offer/offer";
 import { useResetForm } from "../../hooks/useResetForm";
@@ -23,7 +23,7 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
   onClose = () => {},
 }) => {
   const theme = useTheme();
-
+  const [file, setFile] = useState();
   const {
     register,
     formState: { errors, isSubmitSuccessful },
@@ -33,16 +33,30 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
   const [cteateOffer] = useMutation(CREATE_OFFER_MUTATION);
 
   const onSubmitHandler: SubmitHandler<CreateOfferInput> = async (values) => {
-    await cteateOffer({
-      variables: {
-        data: {
-          ...values,
+    console.log(values);
+    try {
+      await cteateOffer({
+        variables: {
+          data: {
+            ...values,
+          },
+          file: file,
         },
-      },
-    });
+      });
+
+      console.log("File uploaded successfully");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useResetForm({ isSubmitSuccessful, reset });
+
+  const handleFileUpload = async (event: any) => {
+    const file = event.target.files[0];
+    console.log(file);
+    setFile(file);
+  };
 
   return (
     <Box
@@ -79,6 +93,7 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
           flexDirection: "column",
           justifyContent: "space-between",
           minHeight: "420px",
+          pb: 4,
         }}
         onSubmit={handleSubmit(onSubmitHandler)}
       >
@@ -113,9 +128,20 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
               {...register("description")}
               multiline
             />
+            <input
+              id="photo"
+              type="file"
+              required
+              onChange={handleFileUpload}
+            />
           </Grid>
           <Grid item xs={5}>
             <Box>A photo will be added here </Box>
+            <img
+              width="360"
+              src={file && URL.createObjectURL(file)}
+              alt="A photo will be added here "
+            />
           </Grid>
         </Grid>
         <Button variant="contained" type="submit" fullWidth>

@@ -19,9 +19,12 @@
     "@types/node": "^16.18.11",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "apollo-upload-client": "^17.0.0",
     "graphql": "^16.6.0",
     "react": "^18.2.0",
+    "react-avatar-editor": "^13.0.0",
     "react-dom": "^18.2.0",
+    "react-easy-crop": "^4.7.4",
     "react-hook-form": "^7.43.7",
     "react-loader-spinner": "^5.3.4",
     "react-redux": "^8.0.5",
@@ -62,6 +65,7 @@
   "devDependencies": {
     "@graphql-codegen/cli": "3.2.2",
     "@graphql-codegen/client-preset": "2.1.1",
+    "@types/apollo-upload-client": "^17.0.2",
     "@types/styled-components": "^5.1.26"
   }
 }
