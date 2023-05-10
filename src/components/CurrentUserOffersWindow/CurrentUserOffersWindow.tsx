@@ -38,8 +38,8 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
     <Modal open={open} onClose={onClose}>
       <Box
         sx={{
-          minHeight: "560px",
-          maxHeight: "75vh",
+          minHeight: 320 * 2,
+          maxHeight: 320 * 2,
           minWidth: 320 * 4,
           maxWidth: 320 * 4,
           position: "absolute" as "absolute",

@@ -34,21 +34,17 @@ export const OffersForUserDesk: React.FC = () => {
     movement: number,
     ...args: any
   ): Promise<void> => {
-    console.log(givenId);
     if (!!!givenId) return;
     const data = {
       givenId: +givenId,
       receivedId: +args[0],
       isLiked: movement < 0,
     };
-    console.log(data);
     createGrade({
       variables: {
         data: { ...data },
       },
-      onCompleted: (data) => {
-        console.log(data);
-      },
+      onCompleted: (data) => {},
     });
   };
   const fetch = () => {
