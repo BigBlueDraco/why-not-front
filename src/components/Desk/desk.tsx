@@ -87,6 +87,7 @@ export const Deck: React.FC<IDeck> = ({
                 style={{ x, y }}
               >
                 <Card
+                  bgImg={cards[i].img}
                   onDrag={isSwipebel && { ...bind(i) }}
                   to={[rot, scale]}
                   title={cards[i].title}

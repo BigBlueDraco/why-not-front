@@ -25,6 +25,7 @@
     "react-avatar-edit": "^1.2.0",
     "react-avatar-editor": "^13.0.0",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.2.3",
     "react-easy-crop": "^4.7.4",
     "react-hook-form": "^7.43.7",
     "react-image-crop": "^10.0.9",

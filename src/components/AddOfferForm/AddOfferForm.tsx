@@ -10,12 +10,18 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { CREATE_OFFER_MUTATION } from "../../apollo/offer/offer";
+import {
+  CREATE_OFFER_MUTATION,
+  GET_ALL_OFFERS,
+} from "../../apollo/offer/offer";
 import { useResetForm } from "../../hooks/useResetForm";
 import { CreateOfferInput, CreateOfferSchema } from "./addOffer.schema";
 import { ImageChoper } from "../ImageChoper/ImageChoper";
+import { useDropzone } from "react-dropzone";
+import { any } from "zod";
+import { FileDrop } from "../FileDrop/FileDrop";
 
 interface ICreateOfferForm {
   onClose?(): void;
@@ -23,6 +29,7 @@ interface ICreateOfferForm {
 export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
   onClose = () => {},
 }) => {
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const theme = useTheme();
   const [file, setFile] = useState<any>();
   const [preview, setPreview] = useState<any>();
@@ -50,18 +57,13 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
           file: formData.getAll("file")[0],
         },
       });
+      acceptedFiles.splice(0, acceptedFiles.length);
     } catch (error) {
       console.error(error);
     }
   };
 
   useResetForm({ isSubmitSuccessful, reset });
-
-  const handleFileUpload = async (event: any) => {
-    const file = event.target.files[0];
-    setFile(file);
-    setIsCropeningImg(true);
-  };
 
   return (
     <Box
@@ -109,7 +111,7 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
             }}
             onSubmit={handleSubmit(onSubmitHandler)}
           >
-            <Grid container spacing={6}>
+            <Grid container spacing={7}>
               <Grid
                 sx={{
                   display: "flex",
@@ -117,7 +119,7 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
                   gap: 2,
                 }}
                 item
-                xs={7}
+                xs={8}
               >
                 <Typography
                   align="center"
@@ -148,13 +150,14 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
                   {...register("description")}
                   multiline
                 />
-                <input id="photo" type="file" onChange={handleFileUpload} />
               </Grid>
-              <Grid item xs={5}>
-                <img
-                  width="360"
+              <Grid item xs={4}>
+                <FileDrop
                   src={preview}
-                  alt="A photo will be added here "
+                  onFileChoise={(file, isCropeting) => {
+                    setFile(file);
+                    setIsCropeningImg(isCropeting);
+                  }}
                 />
               </Grid>
             </Grid>

@@ -11,6 +11,7 @@ interface ICard extends HTMLAttributes<HTMLDivElement> {
   desc?: string;
   children?: any;
   onClick?: any;
+  bgImg?: string;
 }
 export const Card: React.FC<ICard> = ({
   to: [rot, scale] = [],
@@ -19,6 +20,7 @@ export const Card: React.FC<ICard> = ({
   desc = "",
   children,
   onClick = () => {},
+  bgImg,
   ...props
 }) => {
   const trans = (r: number, s: number) =>
@@ -27,6 +29,7 @@ export const Card: React.FC<ICard> = ({
     }deg) rotateZ(${r}deg) scale(${s})`;
   return (
     <StyledCard
+      bgImg={bgImg}
       {...props}
       onClick={onClick}
       {...onDrag}

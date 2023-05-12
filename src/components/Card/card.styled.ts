@@ -1,9 +1,14 @@
 import { animated } from "@react-spring/web";
 import styled from "styled-components";
 
-export const StyledCard = styled(animated.div)`
+interface StyledCardProps {
+  bgImg: string;
+}
+
+export const StyledCard = styled(animated.div)<StyledCardProps>`
+  background-image: url(${(props) => props.bgImg || ""});
+  background-size: 360px 520px;
   background-color: white;
-  background-size: auto 85%;
   background-repeat: no-repeat;
   background-position: center center;
   min-width: 320px;

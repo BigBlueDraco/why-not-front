@@ -9,6 +9,7 @@ import { GET_CURRENT_USER } from "../../apollo/User/user";
 import { CreateOfferForm } from "../AddOfferForm/AddOfferForm";
 import { Card } from "../Card/Card";
 import { theme } from "../../themes/themeMaterialUI";
+import { createGoogleImgLink } from "../../utils/createGoogleImgLink";
 
 interface ICurrentUserOffersWindow {
   open: boolean;
@@ -97,10 +98,12 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
                       id,
                       description,
                       title,
+                      img,
                     }: {
                       id: number;
                       description: string;
                       title: string;
+                      img: string;
                     }) => (
                       <Grid
                         key={id}
@@ -109,6 +112,7 @@ export const CurrentUserOffersWindow: React.FC<ICurrentUserOffersWindow> = ({
                         xs={4}
                       >
                         <Card
+                          bgImg={createGoogleImgLink(img)}
                           onClick={() => {
                             onChoice(id);
                             onClose();
