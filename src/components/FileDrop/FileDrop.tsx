@@ -1,7 +1,6 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDropzone } from "react-dropzone";
-import { ImageChoper } from "../ImageChoper/ImageChoper";
 
 interface FileDropProps {
   src?: string;
@@ -11,16 +10,17 @@ export const FileDrop: React.FC<FileDropProps> = ({ src, onFileChoise }) => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   useEffect(() => {
     onFileChoise(acceptedFiles[0], !!acceptedFiles[0]);
-  }, [acceptedFiles]);
+  }, [acceptedFiles, onFileChoise]);
   return (
     <>
       <Box
         sx={{
-          bgcolor: "brown",
           minHeight: 520,
           maxWidth: 360,
           borderRadius: "10px",
           overflow: "hidden",
+          border: "2px dashed #1C6EA4",
+          boxShadow: "inset 0px 0px 30px 10px rgba(0,0,0,0.3)",
           flex: {
             display: "flex",
             justifyContent: "center",
@@ -30,13 +30,10 @@ export const FileDrop: React.FC<FileDropProps> = ({ src, onFileChoise }) => {
         {...getRootProps({ className: "dropzone" })}
       >
         <input {...getInputProps()} required id="photo" type="file" />
-        {src && (
-          <img
-            height="520"
-            width="360"
-            src={src}
-            alt="A photo will be added here "
-          />
+        {src ? (
+          <img height="520" width="360" src={src} alt="Preview" />
+        ) : (
+          <p>Drop file or click</p>
         )}
       </Box>
     </>

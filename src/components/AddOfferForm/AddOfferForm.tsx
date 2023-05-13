@@ -2,6 +2,7 @@ import { useMutation } from "@apollo/client";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import {
+  Alert,
   Box,
   Button,
   Grid,
@@ -10,18 +11,14 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import {
-  CREATE_OFFER_MUTATION,
-  GET_ALL_OFFERS,
-} from "../../apollo/offer/offer";
+import { CREATE_OFFER_MUTATION } from "../../apollo/offer/offer";
 import { useResetForm } from "../../hooks/useResetForm";
-import { CreateOfferInput, CreateOfferSchema } from "./addOffer.schema";
-import { ImageChoper } from "../ImageChoper/ImageChoper";
-import { useDropzone } from "react-dropzone";
-import { any } from "zod";
 import { FileDrop } from "../FileDrop/FileDrop";
+import { ImageChoper } from "../ImageChoper/ImageChoper";
+import { CreateOfferInput, CreateOfferSchema } from "./addOffer.schema";
+import zIndex from "@mui/material/styles/zIndex";
 
 interface ICreateOfferForm {
   onClose?(): void;
@@ -29,7 +26,6 @@ interface ICreateOfferForm {
 export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
   onClose = () => {},
 }) => {
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const theme = useTheme();
   const [file, setFile] = useState<any>();
   const [preview, setPreview] = useState<any>();
@@ -48,62 +44,62 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
       const blob = await file.blob();
       const formData = new FormData();
       formData.append("file", blob);
-
-      await cteateOffer({
-        variables: {
-          data: {
-            ...values,
+      if (!!formData.getAll("file")[0]) {
+        await cteateOffer({
+          variables: {
+            data: {
+              ...values,
+            },
+            file: formData.getAll("file")[0],
           },
-          file: formData.getAll("file")[0],
-        },
-      });
-      acceptedFiles.splice(0, acceptedFiles.length);
+        });
+      }
     } catch (error) {
       console.error(error);
     }
   };
 
-  useResetForm({ isSubmitSuccessful, reset });
+  useResetForm({ isSubmitSuccessful: isSubmitSuccessful && preview, reset });
 
   return (
-    <Box
-      sx={{
-        minWidth: "100%",
-
-        display: "flex",
-        flexDirection: "column",
-        gap: 4,
-      }}
-    >
-      <IconButton
-        onClick={() => onClose()}
+    <>
+      <Box
         sx={{
-          position: "absolute",
-          left: 4,
-          top: 4,
-          color: (theme) => theme.palette.grey[500],
+          minWidth: "100%",
+          display: "flex",
+          flexDirection: "column",
+          gap: 4,
         }}
       >
-        <ArrowBackIosIcon />
-      </IconButton>
-      {isCropeningImg ? (
-        <>
-          {file && (
-            <ImageChoper
-              src={file && URL.createObjectURL(file)}
-              onClose={(url: string) => {
-                setPreview(url);
-                setIsCropeningImg(false);
-              }}
-            />
-          )}
-        </>
-      ) : (
-        <>
+        <IconButton
+          onClick={() => onClose()}
+          sx={{
+            position: "absolute",
+            left: 4,
+            top: 4,
+            color: (theme) => theme.palette.grey[500],
+          }}
+        >
+          <ArrowBackIosIcon />
+        </IconButton>
+        {isCropeningImg ? (
+          <>
+            {file && (
+              <ImageChoper
+                src={file && URL.createObjectURL(file)}
+                onClose={(url: string) => {
+                  setPreview(url);
+                  setIsCropeningImg(false);
+                }}
+              />
+            )}
+          </>
+        ) : (
           <Box
             component={"form"}
             sx={{
               display: "flex",
+              gap: 2,
               flexDirection: "column",
               justifyContent: "space-between",
               minHeight: "420px",
@@ -165,8 +161,8 @@ export const CreateOfferForm: React.FC<ICreateOfferForm> = ({
               Create offer
             </Button>
           </Box>
-        </>
-      )}
-    </Box>
+        )}
+      </Box>
+    </>
   );
 };

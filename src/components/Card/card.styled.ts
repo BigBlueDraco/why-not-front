@@ -11,8 +11,8 @@ export const StyledCard = styled(animated.div)<StyledCardProps>`
   background-color: white;
   background-repeat: no-repeat;
   background-position: center center;
-  min-width: 320px;
-  max-width: 320px;
+  min-width: 360px;
+  max-width: 360px;
   min-height: 520px;
   max-height: 520px;
   will-change: transform;

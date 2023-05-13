@@ -61,7 +61,7 @@ export const CurrentOfferDeck: React.FC = () => {
                 setIsChousenOffersListOpen(true);
               }}
               sx={{
-                minWidth: 320,
+                minWidth: "100%",
                 minHeight: 520,
                 boxShadow: "inset 0px 0px 20px 0px rgba(0,0,0,0.25)",
               }}
